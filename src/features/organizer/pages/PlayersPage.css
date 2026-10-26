@@ -5,7 +5,7 @@
 
 .players__add {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 118px 64px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 60px;
   gap: 6px;
 }
 
@@ -23,7 +23,7 @@
 
 .players__select {
   padding: 0 4px 0 8px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .players__add-btn {

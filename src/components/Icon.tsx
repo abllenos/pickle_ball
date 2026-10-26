@@ -1,6 +1,12 @@
 import type { SVGProps } from 'react'
 
 const paths = {
+  home: (
+    <>
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9v11h14V9" />
+    </>
+  ),
   court: (
     <>
       <rect x="3" y="5" width="18" height="14" rx="2" />

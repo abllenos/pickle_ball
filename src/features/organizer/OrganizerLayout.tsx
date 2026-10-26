@@ -5,6 +5,7 @@ import { useSession } from '../../store/sessionStore'
 import { AutoFill } from './AutoFill'
 
 const navItems: NavItem[] = [
+  { to: '/', label: 'Home', icon: 'home', end: true },
   { to: '/organizer', label: 'Courts', icon: 'court', end: true },
   { to: '/organizer/players', label: 'Players', icon: 'list' },
   { to: '/organizer/up-next', label: 'Up Next', icon: 'speaker' },
