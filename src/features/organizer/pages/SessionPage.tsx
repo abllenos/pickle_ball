@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { CastButton } from '../../../components/CastButton/CastButton'
 import { Icon } from '../../../components/Icon'
 import { PageHeader } from '../../../components/PageHeader/PageHeader'
 import { Segmented } from '../../../components/Segmented'
 import { announcementLines } from '../../../core/announcer'
 import { isSpeechSupported } from '../../../lib/speech'
 import { changeTheme } from '../../../lib/theme'
+import { enterTvMode } from '../../../lib/tvMode'
 import { formatLeft, useNow, wallClock } from '../../../lib/time'
 import { useVoices } from '../../../lib/useVoices'
 import { mockTestCall } from '../../../mocks/mockData'
@@ -308,9 +310,17 @@ export default function SessionPage() {
         )}
       </section>
 
-      <a href="/display" target="_blank" rel="noreferrer" className="btn btn--secondary btn--block">
-        Open TV screen
-      </a>
+      <CastButton />
+      <button
+        type="button"
+        className="btn btn--secondary btn--block"
+        onClick={() => {
+          void enterTvMode()
+          navigate('/display', { state: { fromApp: true } })
+        }}
+      >
+        Show TV screen on this phone
+      </button>
       <button
         type="button"
         className={confirmEnd ? 'btn btn--secondary btn--block session__end session__end--confirm' : 'btn btn--secondary btn--block session__end'}

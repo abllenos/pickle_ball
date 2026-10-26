@@ -1,0 +1,50 @@
+.cast-btn {
+  gap: 10px;
+}
+
+.cast-btn svg {
+  color: var(--color-primary);
+}
+
+.cast-btn:disabled {
+  color: var(--color-muted);
+}
+
+.cast-btn--on,
+.cast-btn--on:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-tint);
+  color: var(--color-primary-dark);
+}
+
+.cast-btn__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 0 var(--color-primary-glow);
+  animation: cast-live 1.6s ease-out infinite;
+}
+
+@keyframes cast-live {
+  0% {
+    box-shadow: 0 0 0 0 var(--color-primary-glow);
+  }
+  70% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.cast-btn__stop {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-card);
+  font-size: var(--text-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cast-btn__dot {
+    animation: none;
+  }
+}

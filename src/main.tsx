@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
 import { queryClient } from './app/queryClient'
 import { router } from './app/router'
+import { initCast, startCastReceiver } from './lib/cast'
 import { startThemeSync } from './lib/theme'
 import './styles/tokens.css'
 import './styles/base.css'
@@ -13,6 +14,8 @@ import './styles/ui.css'
 
 registerSW({ immediate: true })
 startThemeSync()
+initCast()
+startCastReceiver()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

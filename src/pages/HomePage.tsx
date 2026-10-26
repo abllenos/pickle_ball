@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Brand } from '../components/Brand/Brand'
+import { CastButton } from '../components/CastButton/CastButton'
 import { ThemeButton } from '../components/ThemeButton/ThemeButton'
 import { formatLeft, useNow } from '../lib/time'
+import { enterTvMode } from '../lib/tvMode'
 import { useSession } from '../store/sessionStore'
 import './HomePage.css'
 
@@ -25,6 +27,7 @@ export default function HomePage() {
   const session = useSession()
   const { status, name, venue, players, courts, rentalEndsAt, endSession } = session
   const now = useNow()
+  const navigate = useNavigate()
   const [confirmEnd, setConfirmEnd] = useState(false)
 
   if (status === 'none') {
@@ -93,12 +96,20 @@ export default function HomePage() {
         <Link to="/organizer" className="btn btn--primary btn--block">
           Continue
         </Link>
-        <a href="/display" target="_blank" rel="noreferrer" className="btn btn--secondary btn--block">
-          Open TV screen
-        </a>
+        <CastButton />
+        <button
+          type="button"
+          className="btn btn--secondary btn--block"
+          onClick={() => {
+            void enterTvMode()
+            navigate('/display', { state: { fromApp: true } })
+          }}
+        >
+          Show TV screen on this phone
+        </button>
         <p className="footnote">
-          The TV screen follows this session in the same browser. Open it in another tab on the device connected to
-          the venue TV.
+          <b>Cast to TV</b> sends the dashboard to a Chromecast or Google TV on the same Wi-Fi, and this phone stays
+          on the organizer screens.
         </p>
 
         <div className="spacer" />

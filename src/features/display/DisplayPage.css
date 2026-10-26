@@ -1,6 +1,7 @@
 .tv {
   --u: min(calc(100vw / 1920), calc(100vh / 1080));
 
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,6 +33,46 @@
   display: flex;
   align-items: center;
   gap: calc(18 * var(--u));
+}
+
+/* A phone held upright (or one that can't lock to landscape): draw the display sideways */
+@media (orientation: portrait) and (pointer: coarse) {
+  .tv {
+    --u: min(calc(100vh / 1920), calc(100vw / 1080));
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vh;
+    height: 100vw;
+    transform: rotate(90deg) translateY(-100%);
+    transform-origin: top left;
+  }
+}
+
+.tv__exit {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-glass);
+  box-shadow: var(--shadow-float);
+  color: var(--color-ink);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: opacity 0.3s;
+}
+
+.tv__exit--hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .tv__idle {

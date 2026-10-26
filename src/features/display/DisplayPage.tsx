@@ -1,4 +1,8 @@
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Icon } from '../../components/Icon'
+import { exitTvMode } from '../../lib/tvMode'
+import { AutoFill } from '../organizer/AutoFill'
 import { queueOrder } from '../../core/matching'
 import { rankPlayers } from '../../core/standings'
 import { formatClock, formatLeft, useNow, wallClock } from '../../lib/time'
@@ -7,14 +11,57 @@ import './DisplayPage.css'
 
 const TOP_COUNT = 5
 
+/** Close button for when the organizer opened the TV screen on their own device. Fades out until the screen is touched. */
+function TvExit() {
+  const navigate = useNavigate()
+  const [shown, setShown] = useState(true)
+
+  useEffect(() => {
+    let id = setTimeout(() => setShown(false), 3000)
+    const wake = () => {
+      setShown(true)
+      clearTimeout(id)
+      id = setTimeout(() => setShown(false), 3000)
+    }
+    window.addEventListener('pointerdown', wake)
+    return () => {
+      clearTimeout(id)
+      window.removeEventListener('pointerdown', wake)
+    }
+  }, [])
+
+  return (
+    <button
+      type="button"
+      className={shown ? 'tv__exit' : 'tv__exit tv__exit--hidden'}
+      aria-label="Close TV screen"
+      onClick={() => navigate(-1)}
+    >
+      <Icon name="close" strokeWidth={2.4} />
+    </button>
+  )
+}
+
 export default function DisplayPage() {
   const session = useSession()
   const { name, venue, players, courts, results, scoreLimit, rentalEndsAt } = session
   const now = useNow()
+  const fromApp = Boolean((useLocation().state as { fromApp?: boolean } | null)?.fromApp)
+
+  useEffect(() => (fromApp ? exitTvMode : undefined), [fromApp])
+
+  // Opened from the organizer app on this device: keep filling courts, and offer a way back
+  const controls = fromApp && (
+    <>
+      <AutoFill />
+      <TvExit />
+    </>
+  )
 
   if (session.status === 'none') {
     return (
       <div className="tv">
+        {controls}
         <div className="tv__idle">
           <span className="tv__mark">
             <Icon name="court" size={32} />
@@ -39,6 +86,7 @@ export default function DisplayPage() {
 
   return (
     <div className="tv">
+      {controls}
       <div className="tv__canvas">
         <header className="tv__header">
           <div className="tv__brand">
