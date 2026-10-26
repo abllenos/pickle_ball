@@ -5,8 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#128a52" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0a110e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#128a52" />
+    <script>
+      // Set the theme before first paint so dark mode doesn't flash white
+      try {
+        const saved = JSON.parse(localStorage.getItem('openplay.device') || '{}').state?.theme
+        const dark = saved === 'dark' || (saved !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      } catch {}
+    </script>
     <meta name="description" content="Pickleball Open Play queue, matching and court calls." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

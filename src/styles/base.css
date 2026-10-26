@@ -49,6 +49,17 @@ button {
   cursor: pointer;
 }
 
+/* Theme switch: a cross-fade by default; the theme button replaces it with a growing circle (lib/theme.ts) */
+::view-transition-group(root) {
+  animation-duration: 0.4s;
+}
+
+html.theme-reveal::view-transition-old(root),
+html.theme-reveal::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 :focus-visible {
   outline: 3px solid var(--color-highlight);
   outline-offset: 2px;

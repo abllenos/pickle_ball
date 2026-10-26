@@ -2,7 +2,10 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Language, VoiceStyle } from '../types/models'
 
+export type Theme = 'auto' | 'light' | 'dark'
+
 type DeviceSettings = {
+  theme: Theme
   speakerOn: boolean
   language: Language
   voiceURI: string | null
@@ -18,6 +21,7 @@ type DeviceSettingsActions = {
 }
 
 const defaults: DeviceSettings = {
+  theme: 'auto',
   speakerOn: true,
   language: 'en',
   voiceURI: null,

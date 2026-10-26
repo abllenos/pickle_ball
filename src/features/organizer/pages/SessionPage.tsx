@@ -5,11 +5,12 @@ import { PageHeader } from '../../../components/PageHeader/PageHeader'
 import { Segmented } from '../../../components/Segmented'
 import { announcementLines } from '../../../core/announcer'
 import { isSpeechSupported } from '../../../lib/speech'
+import { changeTheme } from '../../../lib/theme'
 import { formatLeft, useNow, wallClock } from '../../../lib/time'
 import { useVoices } from '../../../lib/useVoices'
 import { mockTestCall } from '../../../mocks/mockData'
 import { useAnnouncer } from '../../../store/announcerStore'
-import { useDeviceSettings } from '../../../store/deviceSettings'
+import { useDeviceSettings, type Theme } from '../../../store/deviceSettings'
 import { rentalHours, useSession } from '../../../store/sessionStore'
 import { SCORE_LIMITS, type Language, type VoiceStyle } from '../../../types/models'
 import './SessionPage.css'
@@ -69,6 +70,23 @@ export default function SessionPage() {
   return (
     <>
       <PageHeader eyebrow={session.name} title="Session" />
+
+      <section className="card session__card">
+        <h2 className="session__title">Appearance</h2>
+        <div className="session__row session__row--stack">
+          <Segmented<Theme>
+            label="Appearance"
+            value={settings.theme}
+            onChange={(theme) => changeTheme(theme)}
+            options={[
+              { value: 'auto', label: 'Auto' },
+              { value: 'light', label: 'Light' },
+              { value: 'dark', label: 'Dark' },
+            ]}
+          />
+          <span className="session__hint">Auto follows your phone's dark mode setting.</span>
+        </div>
+      </section>
 
       <section className="card session__card">
         <h2 className="session__title">Games</h2>

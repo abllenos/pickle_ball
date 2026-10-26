@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Brand } from '../components/Brand/Brand'
+import { ThemeButton } from '../components/ThemeButton/ThemeButton'
 import { formatLeft, useNow } from '../lib/time'
 import { useSession } from '../store/sessionStore'
 import './HomePage.css'
@@ -11,7 +12,14 @@ const steps = [
   { title: 'Tap who won', hint: 'The next four are picked fairly and called on the speaker.' },
 ]
 
-const copyright = <p className="home__copyright">© {new Date().getFullYear()} Alvin Llenos. All Rights Reserved.</p>
+const top = (
+  <div className="home__top">
+    <Brand />
+    <ThemeButton />
+  </div>
+)
+
+const copyright =<p className="home__copyright">© {new Date().getFullYear()} Alvin Llenos. All Rights Reserved.</p>
 
 export default function HomePage() {
   const session = useSession()
@@ -23,7 +31,7 @@ export default function HomePage() {
     return (
       <div className="app-shell">
         <main className="app-shell__content home page">
-          <Brand />
+          {top}
           <div className="home__intro">
             <h1 className="home__title">Run your open play</h1>
             <p className="muted">Courts never sit idle and everyone gets the same playing time.</p>
@@ -58,7 +66,7 @@ export default function HomePage() {
   return (
     <div className="app-shell">
       <main className="app-shell__content home page">
-        <Brand />
+        {top}
 
         <section className="card home__session">
           <span className="section-label">Session in progress</span>
