@@ -227,6 +227,10 @@
   background: var(--color-card);
 }
 
+.list-card[hidden] {
+  display: none;
+}
+
 .list-card > li + li {
   border-top: 1px solid var(--color-divider);
 }

@@ -1,6 +1,7 @@
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { BottomNav, type NavItem } from '../../components/BottomNav/BottomNav'
 import { SpeakerBar } from '../../components/SpeakerBar/SpeakerBar'
+import { useSession } from '../../store/sessionStore'
 import { AutoFill } from './AutoFill'
 
 const navItems: NavItem[] = [
@@ -11,6 +12,10 @@ const navItems: NavItem[] = [
 ]
 
 export default function OrganizerLayout() {
+  const status = useSession((s) => s.status)
+
+  if (status === 'none') return <Navigate to="/" replace />
+
   return (
     <div className="app-shell">
       <AutoFill />

@@ -5,8 +5,14 @@
 
 .players__add {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 76px 76px;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 118px 64px;
+  gap: 6px;
+}
+
+.players__start {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .players__input {
@@ -16,7 +22,8 @@
 }
 
 .players__select {
-  padding: 0 8px;
+  padding: 0 4px 0 8px;
+  font-size: 14px;
 }
 
 .players__add-btn {

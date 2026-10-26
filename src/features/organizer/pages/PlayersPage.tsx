@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PageHeader } from '../../../components/PageHeader/PageHeader'
 import { queueOrder } from '../../../core/matching'
 import { useSession, waitingPlayers } from '../../../store/sessionStore'
-import { SKILL_LEVELS, type Player, type SkillLevel } from '../../../types/models'
+import { SKILL_LEVELS, SKILL_NAMES, type Player, type SkillLevel } from '../../../types/models'
 import './PlayersPage.css'
 
 function gamesLabel(n: number) {
@@ -11,7 +12,7 @@ function gamesLabel(n: number) {
 
 export default function PlayersPage() {
   const session = useSession()
-  const { players, courts, addPlayer, removePlayer, setResting } = session
+  const { players, courts, results, addPlayer, removePlayer, setResting } = session
   const [name, setName] = useState('')
   const [skill, setSkill] = useState<SkillLevel>(3.0)
   const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
@@ -27,6 +28,7 @@ export default function PlayersPage() {
   const min = counts.length ? Math.min(...counts) : 0
   const max = counts.length ? Math.max(...counts) : 0
   const sorted = [...active].sort((a, b) => played(a) - played(b) || a.name.localeCompare(b.name))
+  const notStarted = results.length === 0 && courts.every((c) => !c.players)
 
   const status = (p: Player) => {
     const court = courtOf.get(p.id)
@@ -61,7 +63,7 @@ export default function PlayersPage() {
         <input
           id="add-name"
           className="input players__input"
-          placeholder="Add a player"
+          placeholder="Player name"
           value={name}
           onChange={(event) => setName(event.target.value)}
           autoComplete="off"
@@ -77,7 +79,7 @@ export default function PlayersPage() {
         >
           {SKILL_LEVELS.map((level) => (
             <option key={level} value={level}>
-              {level.toFixed(1)}
+              {SKILL_NAMES[level]}
             </option>
           ))}
         </select>
@@ -87,16 +89,39 @@ export default function PlayersPage() {
       </form>
       <p className="players__note">Late arrivals start level with whoever has played least, so nobody gets pushed off.</p>
 
-      <section className={max - min <= 1 ? 'players__fair' : 'players__fair players__fair--off'}>
-        <b>{min === max ? `Everyone is on ${gamesLabel(min)}` : `Games played: ${min}–${max}`}</b>
-        <span>
-          {max - min <= 1
-            ? 'Fair: nobody is more than one game behind.'
-            : 'Someone is behind. They play first until they catch up.'}
-        </span>
-      </section>
+      {notStarted && (
+        <section className="card players__start">
+          {active.length < 4 ? (
+            <span className="muted">
+              {active.length === 0
+                ? 'No players yet. Add each player as they arrive at the desk.'
+                : `${active.length} of 4 players needed for the first game.`}
+            </span>
+          ) : (
+            <>
+              <span>
+                <b>{active.length} players ready.</b> Add more any time.
+              </span>
+              <Link to="/organizer" className="btn btn--primary btn--block">
+                Start games on Courts
+              </Link>
+            </>
+          )}
+        </section>
+      )}
 
-      <ul className="list-card">
+      {active.length > 0 && (
+        <section className={max - min <= 1 ? 'players__fair' : 'players__fair players__fair--off'}>
+          <b>{min === max ? `Everyone is on ${gamesLabel(min)}` : `Games played: ${min}–${max}`}</b>
+          <span>
+            {max - min <= 1
+              ? 'Fair: nobody is more than one game behind.'
+              : 'Someone is behind. They play first until they catch up.'}
+          </span>
+        </section>
+      )}
+
+      <ul className="list-card" hidden={active.length === 0}>
         {sorted.map((p) => {
           const onCourt = courtOf.has(p.id)
           return (
@@ -105,7 +130,7 @@ export default function PlayersPage() {
                 <b>{p.name}</b> {status(p)}
                 <br />
                 <span className="sub">
-                  {p.skill.toFixed(1)} · {gamesLabel(played(p))} · {p.wins} wins
+                  {SKILL_NAMES[p.skill]} · {gamesLabel(played(p))} · {p.wins} wins
                 </span>
               </span>
               <span className="players__buttons">
@@ -155,7 +180,7 @@ export default function PlayersPage() {
                 <b className="players__resting-name">{p.name}</b>
                 <br />
                 <span className="sub">
-                  {p.skill.toFixed(1)} · {gamesLabel(p.games)} · on a break
+                  {SKILL_NAMES[p.skill]} · {gamesLabel(p.games)} · on a break
                 </span>
               </span>
               <button type="button" className="btn btn--primary btn--small" onClick={() => setResting(p.id, false)}>

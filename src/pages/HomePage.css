@@ -20,29 +20,57 @@
   letter-spacing: -0.01em;
 }
 
-.home__group {
+.home__steps {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.home__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.home__num {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary-tint);
+  color: var(--color-primary-dark);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.home__session {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.home__link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 52px;
-  color: var(--color-ink);
-  font-weight: 600;
-  text-decoration: none;
+.home__session .home__title {
+  font-size: 28px;
 }
 
-.home__link:hover {
-  color: var(--color-primary-dark);
+.home__session .stat-grid {
+  margin-top: 6px;
 }
 
-.home__path {
-  font-size: var(--text-xs);
-  font-weight: 500;
+.home__session .stat__value {
+  font-size: 20px;
+}
+
+.home__end {
   color: var(--color-muted);
+}
+
+.home__end--confirm,
+.home__end--confirm:hover {
+  border-color: var(--color-warning);
+  background: var(--color-warning-tint);
+  color: var(--color-warning);
 }

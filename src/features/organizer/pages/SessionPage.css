@@ -130,6 +130,17 @@
   font-weight: 700;
 }
 
+.session__end {
+  color: var(--color-muted);
+}
+
+.session__end--confirm,
+.session__end--confirm:hover {
+  border-color: var(--color-warning);
+  background: var(--color-warning-tint);
+  color: var(--color-warning);
+}
+
 .session__step:disabled {
   color: var(--color-input-border);
   cursor: not-allowed;

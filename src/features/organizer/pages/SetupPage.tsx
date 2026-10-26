@@ -44,7 +44,7 @@ export default function SetupPage() {
     <div className="app-shell">
       <main className="app-shell__content setup">
         <div className="setup__head">
-          <Link to="/organizer" className="icon-btn" aria-label="Close">
+          <Link to="/" className="icon-btn" aria-label="Close">
             <Icon name="close" strokeWidth={2.2} />
           </Link>
           <h1 className="setup__title">New session</h1>
@@ -65,7 +65,7 @@ export default function SetupPage() {
               scoreLimit,
               mode,
             })
-            navigate('/organizer')
+            navigate('/organizer/players')
           }}
         >
           <section className="setup__card setup__card--fields">
@@ -82,7 +82,7 @@ export default function SetupPage() {
               <input
                 id="s-venue"
                 className="input"
-                placeholder="[VENUE NAME]"
+                placeholder="Optional"
                 value={venue}
                 onChange={(e) => setVenue(e.target.value)}
               />
@@ -203,7 +203,7 @@ export default function SetupPage() {
 
         <div className="spacer" />
         <button type="submit" form="setup-form" className="btn btn--primary btn--block">
-          Start session
+          Start session & add players
         </button>
       </main>
     </div>

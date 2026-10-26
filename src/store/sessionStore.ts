@@ -2,11 +2,13 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { callName, type CourtCall } from '../core/announcer'
 import { applyGame, joinCredit, pickNextFour } from '../core/matching'
-import { mockRoster, mockSession } from '../mocks/mockData'
 import type { Court, CourtPlayers, GameResult, MatchingMode, Player, ScoreLimit, SkillLevel, Team } from '../types/models'
 import { useAnnouncer } from './announcerStore'
 
+export type SessionStatus = 'none' | 'live'
+
 type SessionData = {
+  status: SessionStatus
   name: string
   venue: string
   rentalStartsAt: number
@@ -50,6 +52,7 @@ type SessionActions = {
   finishGame: (court: number, winner: Team | null) => void
   callAgain: (court: number) => void
   newSession: (setup: SessionSetup) => void
+  endSession: () => void
 }
 
 const MAX_RESULTS = 40
@@ -113,48 +116,20 @@ function newPlayer(name: string, skill: SkillLevel, credit: number, now: number)
   }
 }
 
-function demoState(): SessionData {
-  const now = Date.now()
-  const start = now - 40 * 60_000
-  let players = mockRoster.map((p, i) => newPlayer(p.name, p.skill, 0, start + i))
-  let courts: Court[] = Array.from({ length: mockSession.courtCount }, () => ({ players: null, startedAt: null, fillAt: null }))
-  const results: GameResult[] = []
-
-  let seed = 7
-  const random = () => (seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31
-  const fill = (i: number, at: number) => {
-    const four = pickNextFour(waitingPlayers({ players, courts }), 'balanced')
-    courts = courts.map((c, j) => (j === i ? { players: four, startedAt: four ? at : null, fillAt: null } : c))
-  }
-  courts.forEach((_, i) => fill(i, start + i * 30_000))
-  const length = new Map(courts.map((_, i) => [i, (9 + random() * 10) * 60_000]))
-
-  for (let guard = 0; guard < 100; guard++) {
-    const next = courts
-      .map((c, i) => ({ i, endsAt: (c.startedAt ?? 0) + length.get(i)! }))
-      .sort((a, b) => a.endsAt - b.endsAt)[0]
-    if (next.endsAt > now - 60_000) break
-    const court = courts[next.i]
-    const winner: Team = random() < 0.5 ? 'A' : 'B'
-    results.unshift({ court: next.i + 1, players: court.players!, winner, startedAt: court.startedAt!, endedAt: next.endsAt })
-    players = applyGame(players, court.players!, winner, next.endsAt)
-    courts = courts.map((c, j) => (j === next.i ? { players: null, startedAt: null, fillAt: null } : c))
-    fill(next.i, next.endsAt + 30_000)
-    length.set(next.i, (9 + random() * 10) * 60_000)
-  }
-
+function emptyState(): SessionData {
   return {
-    name: mockSession.name,
-    venue: mockSession.venue,
-    rentalStartsAt: start,
-    rentalEndsAt: start + mockSession.rentalHours * 3_600_000,
-    scoreLimit: mockSession.scoreLimit,
+    status: 'none',
+    name: '',
+    venue: '',
+    rentalStartsAt: 0,
+    rentalEndsAt: 0,
+    scoreLimit: 11,
     mode: 'balanced',
     autoFill: true,
     lastCallMinutes: 5,
-    courts,
-    results,
-    players,
+    courts: [],
+    results: [],
+    players: [],
     nextUp: null,
     option: 0,
   }
@@ -176,7 +151,7 @@ export const useSession = create<SessionData & SessionActions>()(
       }
 
       return {
-        ...demoState(),
+        ...emptyState(),
 
         addPlayer: (name, skill) =>
           set((s) => {
@@ -276,8 +251,8 @@ export const useSession = create<SessionData & SessionActions>()(
 
         newSession: (setup) =>
           set(() => {
-            const now = Date.now()
             return {
+              status: 'live',
               name: setup.name,
               venue: setup.venue,
               rentalStartsAt: setup.rentalStartsAt,
@@ -288,14 +263,16 @@ export const useSession = create<SessionData & SessionActions>()(
               lastCallMinutes: 5,
               courts: Array.from({ length: setup.courtCount }, () => ({ players: null, startedAt: null, fillAt: null })),
               results: [],
-              players: mockRoster.map((p, i) => newPlayer(p.name, p.skill, 0, now + i)),
+              players: [],
               nextUp: null,
               option: 0,
             }
           }),
+
+        endSession: () => set(emptyState()),
       }
     },
-    { name: 'openplay.demo-session', version: 6 },
+    { name: 'openplay.demo-session', version: 7 },
   ),
 )
 

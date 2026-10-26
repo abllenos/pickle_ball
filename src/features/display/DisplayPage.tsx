@@ -12,6 +12,20 @@ export default function DisplayPage() {
   const { name, venue, players, courts, results, scoreLimit, rentalEndsAt } = session
   const now = useNow()
 
+  if (session.status === 'none') {
+    return (
+      <div className="tv">
+        <div className="tv__idle">
+          <span className="tv__mark">
+            <Icon name="court" size={32} />
+          </span>
+          <h1 className="tv__title">Open Play</h1>
+          <p className="tv__meta">Waiting for the organizer to start a session.</p>
+        </div>
+      </div>
+    )
+  }
+
   const names = shortNames(players)
   const short = (id: string) => names.get(id) ?? '—'
   const clock = wallClock(now)

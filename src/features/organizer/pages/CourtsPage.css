@@ -7,6 +7,16 @@
   border-radius: var(--radius-card);
 }
 
+.courts__need {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-color: var(--color-highlight);
+  background: var(--color-highlight-tint);
+  color: var(--color-on-highlight);
+  text-decoration: none;
+}
+
 .courts__card {
   border: 1px solid var(--color-border);
   background: var(--color-card);

@@ -3,9 +3,17 @@
 Pickleball Open Play run by the organizer: courts that never sit idle, fair playing time, spoken court calls and a venue TV display.
 An installable PWA on React + TypeScript + Vite and Firebase Spark (free). Runs at zero cost.
 
-> **Current state: working mockup.** The organizer app and TV display run on a demo session
-> (`src/store/sessionStore.ts`, saved in this browser only). Firebase is not called yet.
+> **Current state: works on one device.** A session is saved in this browser only
+> (`src/store/sessionStore.ts`). Firebase is not called yet.
 > Open `/display` in a second tab of the same browser and it follows the organizer tab live.
+
+## The flow
+
+1. **Start screen** (`/`): Start a session. While one is running: Continue, Open TV screen, End session.
+2. **New session**: name, venue, rental hours, courts, score limit, matching. Then straight to Players.
+3. **Players**: add each player as they arrive. With 4 or more, start the first games on Courts.
+4. **Courts**: tap who won; the next four are called automatically.
+5. **Session**: settings and speaker; End session returns to the start screen.
 
 ## How a session works
 
@@ -45,7 +53,7 @@ npm run dev
 
 | Path | Screen |
 |---|---|
-| `/` | Screen index (mockup) |
+| `/` | Start screen: start, continue or end a session |
 | `/organizer` | Courts: who won, call again, open courts |
 | `/organizer/players` | Players: add, rest, remove, games and wins |
 | `/organizer/up-next` | Up Next: the next four, swaps, waiting line, auto-fill |
@@ -81,9 +89,9 @@ src/
     organizer/  layout + pages
     display/    venue TV
   lib/          speech, time helpers, Firebase init (not used yet)
-  mocks/        sample roster for the demo session
+  mocks/        sample speaker test call
   pages/        Home, NotFound
-  store/        Zustand: demo session, announcer, device settings
+  store/        Zustand: session, announcer, device settings
   styles/       tokens.css (design tokens), base, layout, ui primitives
   types/        data model
 ```

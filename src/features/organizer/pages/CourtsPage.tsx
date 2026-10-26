@@ -49,6 +49,15 @@ export default function CourtsPage() {
         <span className="chip">{waiting.length} waiting</span>
       </div>
 
+      {!next && openCourts.length === courts.length && (
+        <Link to="/organizer/players" className="card courts__need">
+          <b>Add at least 4 players to start</b>
+          <span className="sub">
+            {players.length === 0 ? 'No players yet.' : `${waiting.length} ready so far.`} Tap here to add players.
+          </span>
+        </Link>
+      )}
+
       {openCourts.length > 1 && next && gamesAllowed && courts.every((c) => !c.fillAt) && (
         <button type="button" className="btn btn--primary btn--block" onClick={fillAll}>
           Fill {openCourts.length} open courts & announce

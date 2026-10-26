@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Icon } from '../../../components/Icon'
 import { PageHeader } from '../../../components/PageHeader/PageHeader'
 import { Segmented } from '../../../components/Segmented'
@@ -52,6 +53,8 @@ export default function SessionPage() {
   const session = useSession()
   const voices = useVoices()
   const now = useNow()
+  const navigate = useNavigate()
+  const [confirmEnd, setConfirmEnd] = useState(false)
 
   const langMatch = settings.language === 'tl' ? /^(fil|tl)/i : /^en/i
   const sortedVoices = [...voices].sort(
@@ -287,9 +290,20 @@ export default function SessionPage() {
         )}
       </section>
 
-      <Link to="/organizer/setup" className="btn btn--secondary btn--block">
-        Start a new session
-      </Link>
+      <a href="/display" target="_blank" rel="noreferrer" className="btn btn--secondary btn--block">
+        Open TV screen
+      </a>
+      <button
+        type="button"
+        className={confirmEnd ? 'btn btn--secondary btn--block session__end session__end--confirm' : 'btn btn--secondary btn--block session__end'}
+        onClick={() => {
+          if (!confirmEnd) return setConfirmEnd(true)
+          session.endSession()
+          navigate('/')
+        }}
+      >
+        {confirmEnd ? 'Tap again to end the session' : 'End session'}
+      </button>
     </>
   )
 }

@@ -7,7 +7,7 @@ import { queueOrder } from '../../../core/matching'
 import { formatClock, formatLeft, useNow } from '../../../lib/time'
 import { useDeviceSettings } from '../../../store/deviceSettings'
 import { shortNames, typicalGameMs, upNext, useSession, waitingPlayers } from '../../../store/sessionStore'
-import type { MatchingMode } from '../../../types/models'
+import { SKILL_NAMES, type MatchingMode } from '../../../types/models'
 import './UpNextPage.css'
 
 const MODE_HINT: Record<MatchingMode, string> = {
@@ -45,7 +45,7 @@ export default function UpNextPage() {
         <span className="up-next__slot-name">{p?.name ?? 'Empty spot'}</span>
         {p && (
           <span className="sub">
-            {p.skill.toFixed(1)} · {p.games} played
+            {SKILL_NAMES[p.skill]} · {p.games} played
           </span>
         )}
       </button>
@@ -141,7 +141,7 @@ export default function UpNextPage() {
                     <b>{p.name}</b>
                     <br />
                     <span className="sub">
-                      {p.skill.toFixed(1)} · {p.games} played · waiting {formatClock(now - p.queuedAt)}
+                      {SKILL_NAMES[p.skill]} · {p.games} played · waiting {formatClock(now - p.queuedAt)}
                     </span>
                   </span>
                   {inNext && <span className="chip chip--highlight">Up next</span>}

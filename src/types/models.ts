@@ -1,5 +1,13 @@
 export type SkillLevel = 2.5 | 3.0 | 3.5 | 4.0 | 4.5 | 5.0
 export const SKILL_LEVELS: SkillLevel[] = [2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+export const SKILL_NAMES: Record<SkillLevel, string> = {
+  2.5: 'Beginner',
+  3.0: 'Novice',
+  3.5: 'Intermediate',
+  4.0: 'Advanced',
+  4.5: 'Expert',
+  5.0: 'Pro',
+}
 
 export type MatchingMode = 'same' | 'balanced'
 export type PlayerStatus = 'active' | 'resting'
