@@ -10,7 +10,8 @@
 }
 
 .setup__title {
-  font-size: 26px;
+  font-size: 30px;
+  letter-spacing: -0.02em;
 }
 
 .setup__form {
@@ -25,6 +26,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   background: var(--color-card);
+  box-shadow: var(--shadow-card);
 }
 
 .setup__card--fields {
@@ -105,6 +107,7 @@
   padding: 9px 13px;
   border: 2px solid var(--color-primary);
   background: var(--color-primary-tint);
+  box-shadow: 0 6px 16px var(--color-primary-glow);
 }
 
 .setup__radio {

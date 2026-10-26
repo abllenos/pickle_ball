@@ -15,9 +15,9 @@
 }
 
 .home__title {
-  font-size: 34px;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  font-size: 40px;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 }
 
 .home__steps {
@@ -40,28 +40,103 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--color-primary-tint);
-  color: var(--color-primary-dark);
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
   font-family: var(--font-display);
   font-weight: 700;
 }
 
-.home__session {
+.card.home__session {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: hidden;
+  padding: 20px;
+  border: 0;
+  background: var(--gradient-hero);
+  box-shadow: 0 16px 36px var(--color-primary-glow);
+  color: var(--color-on-hero);
+}
+
+.home__session::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: var(--color-highlight);
+  opacity: 0.18;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.home__session .section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-on-hero);
+  opacity: 0.85;
+}
+
+.home__session .section-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-highlight);
+  box-shadow: 0 0 0 0 var(--color-highlight);
+  animation: home-live 1.8s ease-out infinite;
+}
+
+@keyframes home-live {
+  70% {
+    box-shadow: 0 0 0 8px rgba(197, 240, 58, 0);
+  }
 }
 
 .home__session .home__title {
-  font-size: 28px;
+  font-size: 30px;
+}
+
+.home__session .muted {
+  color: var(--color-on-hero);
+  opacity: 0.75;
 }
 
 .home__session .stat-grid {
-  margin-top: 6px;
+  margin-top: 8px;
+}
+
+.home__session .stat {
+  border: 0;
+  background: var(--color-hero-glass);
+  backdrop-filter: blur(6px);
+}
+
+.home__session .stat__label {
+  color: var(--color-on-hero);
+  opacity: 0.75;
 }
 
 .home__session .stat__value {
   font-size: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home__session .section-label::before {
+    animation: none;
+  }
+}
+
+.home__copyright {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-muted);
+  opacity: 0.8;
 }
 
 .home__end {

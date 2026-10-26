@@ -42,7 +42,7 @@ export default function SetupPage() {
 
   return (
     <div className="app-shell">
-      <main className="app-shell__content setup">
+      <main className="app-shell__content setup page">
         <div className="setup__head">
           <Link to="/" className="icon-btn" aria-label="Close">
             <Icon name="close" strokeWidth={2.2} />

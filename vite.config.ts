@@ -14,8 +14,8 @@ export default defineConfig({
         name: 'Open Play',
         short_name: 'Open Play',
         description: 'Pickleball Open Play queue, matching and court calls.',
-        theme_color: '#177a4f',
-        background_color: '#f5f8f6',
+        theme_color: '#128a52',
+        background_color: '#f2f6f3',
         display: 'standalone',
         start_url: '/',
         icons: [

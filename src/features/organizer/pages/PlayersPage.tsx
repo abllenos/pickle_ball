@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '../../../components/PageHeader/PageHeader'
+import { Select } from '../../../components/Select/Select'
 import { queueOrder } from '../../../core/matching'
 import { useSession, waitingPlayers } from '../../../store/sessionStore'
 import { SKILL_LEVELS, SKILL_NAMES, type Player, type SkillLevel } from '../../../types/models'
@@ -68,21 +69,12 @@ export default function PlayersPage() {
           onChange={(event) => setName(event.target.value)}
           autoComplete="off"
         />
-        <label htmlFor="add-skill" className="visually-hidden">
-          Skill level
-        </label>
-        <select
-          id="add-skill"
-          className="input players__input players__select"
+        <Select
+          label="Skill level"
           value={skill}
-          onChange={(event) => setSkill(Number(event.target.value) as SkillLevel)}
-        >
-          {SKILL_LEVELS.map((level) => (
-            <option key={level} value={level}>
-              {SKILL_NAMES[level]}
-            </option>
-          ))}
-        </select>
+          onChange={setSkill}
+          options={SKILL_LEVELS.map((level) => ({ value: level, label: SKILL_NAMES[level] }))}
+        />
         <button type="submit" className="players__add-btn">
           Add
         </button>

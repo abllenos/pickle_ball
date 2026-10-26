@@ -11,6 +11,8 @@ const steps = [
   { title: 'Tap who won', hint: 'The next four are picked fairly and called on the speaker.' },
 ]
 
+const copyright = <p className="home__copyright">© {new Date().getFullYear()} Alvin Llenos. All Rights Reserved.</p>
+
 export default function HomePage() {
   const session = useSession()
   const { status, name, venue, players, courts, rentalEndsAt, endSession } = session
@@ -20,7 +22,7 @@ export default function HomePage() {
   if (status === 'none') {
     return (
       <div className="app-shell">
-        <main className="app-shell__content home">
+        <main className="app-shell__content home page">
           <Brand />
           <div className="home__intro">
             <h1 className="home__title">Run your open play</h1>
@@ -44,6 +46,7 @@ export default function HomePage() {
           <Link to="/organizer/setup" className="btn btn--primary btn--block">
             Start a session
           </Link>
+          {copyright}
         </main>
       </div>
     )
@@ -54,7 +57,7 @@ export default function HomePage() {
 
   return (
     <div className="app-shell">
-      <main className="app-shell__content home">
+      <main className="app-shell__content home page">
         <Brand />
 
         <section className="card home__session">
@@ -102,6 +105,7 @@ export default function HomePage() {
         >
           {confirmEnd ? 'Tap again to end the session' : 'End session'}
         </button>
+        {copyright}
       </main>
     </div>
   )

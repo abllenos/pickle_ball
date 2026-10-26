@@ -159,7 +159,7 @@
   padding: calc(6 * var(--u)) calc(18 * var(--u));
   border-radius: var(--radius-pill);
   background: var(--color-highlight);
-  color: var(--color-on-highlight);
+  color: var(--color-on-lime);
   font-size: calc(24 * var(--u));
   font-weight: 700;
 }
@@ -262,7 +262,7 @@
 
 .tv__pos--first {
   background: var(--color-highlight);
-  color: var(--color-on-highlight);
+  color: var(--color-on-lime);
 }
 
 .tv__pos--podium {
@@ -341,11 +341,11 @@
 @keyframes tv-winner-in {
   from {
     transform: scale(0.97);
-    box-shadow: 0 0 0 calc(12 * var(--u)) rgba(199, 228, 58, 0.5);
+    box-shadow: 0 0 0 calc(12 * var(--u)) rgba(197, 240, 58, 0.5);
   }
   to {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(199, 228, 58, 0);
+    box-shadow: 0 0 0 0 rgba(197, 240, 58, 0);
   }
 }
 
