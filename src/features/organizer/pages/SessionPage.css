@@ -1,0 +1,136 @@
+.session__card {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 16px 14px;
+}
+
+.session__warning {
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  background: var(--color-warning-tint);
+  color: var(--color-warning);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.session__title {
+  margin: 10px 0 4px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.session__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.session__row--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.session__hint {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.session__select {
+  width: 100%;
+  height: var(--touch-min);
+}
+
+.session__rate-label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.session__range {
+  width: 100%;
+  accent-color: var(--color-primary);
+}
+
+.session__test {
+  margin-top: 12px;
+}
+
+.session__calls {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session__call {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.session__call + .session__call {
+  border-top: 1px solid var(--color-divider);
+}
+
+.session__time {
+  flex: none;
+  width: 36px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.session__call-text {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-sm);
+}
+
+.session__replay {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-card);
+  color: var(--color-primary);
+}
+
+.session__empty {
+  margin: 0 0 4px;
+}
+
+.session__stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.session__step {
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-card);
+  font-size: 20px;
+}
+
+.session__count {
+  width: 24px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.session__step:disabled {
+  color: var(--color-input-border);
+  cursor: not-allowed;
+}

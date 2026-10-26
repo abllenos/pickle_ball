@@ -1,0 +1,16 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-header__eyebrow {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.page-header__title {
+  font-size: 30px;
+  line-height: 1.1;
+}
