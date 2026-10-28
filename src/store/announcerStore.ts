@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { announcementLines, type Announcement } from '../core/announcer'
-import { speak, stopSpeaking } from '../lib/speech'
+import { previewName, speak, stopSpeaking } from '../lib/speech'
 import { useDeviceSettings } from './deviceSettings'
 
 type AnnouncerState = {
@@ -9,6 +9,7 @@ type AnnouncerState = {
   notice: string | null
   recent: { at: number; call: Announcement }[]
   announce: (a: Announcement) => void
+  previewName: (name: string, sayAs?: string) => void
   stop: () => void
   dismiss: () => void
 }
@@ -43,6 +44,11 @@ export const useAnnouncer = create<AnnouncerState>()((set, get) => {
       set((state) => ({ notice: null, recent: [{ at: Date.now(), call: a }, ...state.recent].slice(0, 8) }))
       if (get().current) set((state) => ({ queue: [...state.queue, a] }))
       else play(a)
+    },
+    previewName: (name, sayAs) => {
+      if (get().current) return
+      const s = useDeviceSettings.getState()
+      previewName(name, sayAs, { lang: s.language, voiceURI: s.voiceURI, style: s.voiceStyle, rate: s.rate, chime: false, sayTwice: false })
     },
     stop: () => {
       stopSpeaking()

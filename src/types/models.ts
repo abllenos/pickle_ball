@@ -23,6 +23,7 @@ export type Millis = number
 export type Player = {
   id: string
   name: string
+  sayAs?: string
   skill: SkillLevel
   status: PlayerStatus
   games: number

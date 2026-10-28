@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import { PageHeader } from '../../../components/PageHeader/PageHeader'
 import { Select } from '../../../components/Select/Select'
 import { queueOrder } from '../../../core/matching'
-import { useSession, waitingPlayers } from '../../../store/sessionStore'
+import { respellName } from '../../../core/pronounce'
+import { useAnnouncer } from '../../../store/announcerStore'
+import { shortNames, useSession, waitingPlayers } from '../../../store/sessionStore'
 import { SKILL_LEVELS, SKILL_NAMES, type Player, type SkillLevel } from '../../../types/models'
 import './PlayersPage.css'
 
@@ -13,10 +15,13 @@ function gamesLabel(n: number) {
 
 export default function PlayersPage() {
   const session = useSession()
-  const { players, courts, results, addPlayer, removePlayer, setResting } = session
+  const { players, courts, results, addPlayer, removePlayer, setResting, setSayAs } = session
+  const previewName = useAnnouncer((s) => s.previewName)
   const [name, setName] = useState('')
   const [skill, setSkill] = useState<SkillLevel>(3.0)
   const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
+  const [sayEdit, setSayEdit] = useState<{ id: string; draft: string } | null>(null)
+  const names = shortNames(players)
 
   const courtOf = new Map<string, number>()
   courts.forEach((c, i) => c.players?.forEach((id) => courtOf.set(id, i)))
@@ -128,6 +133,15 @@ export default function PlayersPage() {
               <span className="players__buttons">
                 <button
                   type="button"
+                  className="btn btn--small players__say"
+                  aria-label={`How to say ${p.name}`}
+                  aria-expanded={sayEdit?.id === p.id}
+                  onClick={() => setSayEdit(sayEdit?.id === p.id ? null : { id: p.id, draft: p.sayAs ?? '' })}
+                >
+                  🔊
+                </button>
+                <button
+                  type="button"
                   className="btn btn--small"
                   disabled={onCourt}
                   title={onCourt ? 'Can rest after this game' : undefined}
@@ -158,6 +172,39 @@ export default function PlayersPage() {
                   </button>
                 )}
               </span>
+              {sayEdit?.id === p.id && (
+                <form
+                  className="players__say-edit"
+                  onSubmit={(event) => {
+                    event.preventDefault()
+                    setSayAs(p.id, sayEdit.draft)
+                    setSayEdit(null)
+                  }}
+                >
+                  <label htmlFor={`say-${p.id}`} className="sub">
+                    Sounds like (spell it the way it should be said)
+                  </label>
+                  <input
+                    id={`say-${p.id}`}
+                    className="input players__say-input"
+                    placeholder={respellName(names.get(p.id) ?? p.name)}
+                    value={sayEdit.draft}
+                    onChange={(event) => setSayEdit({ id: p.id, draft: event.target.value })}
+                    autoComplete="off"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    className="btn btn--small"
+                    onClick={() => previewName(names.get(p.id) ?? p.name, sayEdit.draft)}
+                  >
+                    Hear it
+                  </button>
+                  <button type="submit" className="btn btn--primary btn--small">
+                    Save
+                  </button>
+                </form>
+              )}
             </li>
           )
         })}

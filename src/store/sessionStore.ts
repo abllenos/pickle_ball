@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { callName, type CourtCall } from '../core/announcer'
+import { callName, type CourtCall, type SayAs } from '../core/announcer'
 import { applyGame, joinCredit, pickNextFour } from '../core/matching'
 import type { Court, CourtPlayers, GameResult, MatchingMode, Player, ScoreLimit, SkillLevel, Team } from '../types/models'
 import { useAnnouncer } from './announcerStore'
@@ -37,6 +37,7 @@ export type SessionSetup = {
 type SessionActions = {
   addPlayer: (name: string, skill: SkillLevel) => void
   removePlayer: (id: string) => void
+  setSayAs: (id: string, sayAs: string) => void
   setResting: (id: string, resting: boolean) => void
   setMode: (mode: MatchingMode) => void
   setScoreLimit: (limit: ScoreLimit) => void
@@ -97,7 +98,13 @@ export function shortNames(players: Player[]): Map<string, string> {
 function courtCall(players: Player[], court: number, four: CourtPlayers): CourtCall {
   const names = shortNames(players)
   const n = (id: string) => names.get(id) ?? '?'
-  return { court: court + 1, teamA: [n(four[0]), n(four[1])], teamB: [n(four[2]), n(four[3])] }
+  const say: SayAs = {}
+  for (const p of players) {
+    const short = names.get(p.id)
+    if (!short || !four.includes(p.id) || !p.sayAs?.trim()) continue
+    say[short] = p.sayAs.trim() + (short.match(/ [A-Z]\.$/)?.[0] ?? '')
+  }
+  return { court: court + 1, teamA: [n(four[0]), n(four[1])], teamB: [n(four[2]), n(four[3])], say }
 }
 
 function newPlayer(name: string, skill: SkillLevel, credit: number, now: number): Player {
@@ -161,6 +168,9 @@ export const useSession = create<SessionData & SessionActions>()(
 
         removePlayer: (id) =>
           set((s) => (onCourtIds(s.courts).has(id) ? s : { players: s.players.filter((p) => p.id !== id) })),
+
+        setSayAs: (id, sayAs) =>
+          set((s) => ({ players: s.players.map((p) => (p.id === id ? { ...p, sayAs: sayAs.trim() || undefined } : p)) })),
 
         setResting: (id, resting) =>
           set((s) => {
@@ -239,6 +249,7 @@ export const useSession = create<SessionData & SessionActions>()(
               court: i + 1,
               team: winner,
               winners: winner === 'A' ? call.teamA : call.teamB,
+              say: call.say,
             })
           }
         },

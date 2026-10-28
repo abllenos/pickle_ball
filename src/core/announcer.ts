@@ -1,9 +1,14 @@
 import type { Language, Team } from '../types/models'
+import { respellName } from './pronounce'
+
+// Call name -> how the organizer said it should sound
+export type SayAs = Record<string, string>
 
 export type CourtCall = {
   court: number
   teamA: [string, string]
   teamB: [string, string]
+  say?: SayAs
 }
 
 export type CallAnnouncement = CourtCall & { kind: 'call' }
@@ -13,6 +18,7 @@ export type WinnerAnnouncement = {
   court: number
   team: Team
   winners: [string, string]
+  say?: SayAs
 }
 
 export type Announcement = CallAnnouncement | WinnerAnnouncement
@@ -29,13 +35,17 @@ export function numberWord(n: number): string {
 
 export const courtWord = numberWord
 
-export function callName(fullName: string, everyone: string[]): string {
+// "Ma. Cristina Reyes" goes by "Ma. Cristina", not "Ma."
+function splitFirst(fullName: string): [string, string[]] {
   const parts = fullName.trim().split(/\s+/)
-  const first = parts[0]
-  const clash = everyone.some(
-    (other) => other !== fullName && other.trim().split(/\s+/)[0].toLowerCase() === first.toLowerCase(),
-  )
-  return clash && parts.length > 1 ? `${first} ${parts[1][0].toUpperCase()}.` : first
+  const take = /^ma\.?$/i.test(parts[0]) && parts.length > 1 ? 2 : 1
+  return [parts.slice(0, take).join(' '), parts.slice(take)]
+}
+
+export function callName(fullName: string, everyone: string[]): string {
+  const [first, rest] = splitFirst(fullName)
+  const clash = everyone.some((other) => other !== fullName && splitFirst(other)[0].toLowerCase() === first.toLowerCase())
+  return clash && rest.length > 0 ? `${first} ${rest[0][0].toUpperCase()}.` : first
 }
 
 type Words = {
@@ -92,7 +102,21 @@ export function announcementLines(a: Announcement, lang: Language): string[] {
   return linesWith(a, lang === 'tl' ? TL : EN)
 }
 
+export function spokenName(name: string, sayAs: string | undefined, hasTagalogVoice: boolean): string {
+  if (sayAs?.trim()) return sayAs.trim()
+  return hasTagalogVoice ? name : respellName(name)
+}
+
+function withSpokenNames(a: Announcement, hasTagalogVoice: boolean): Announcement {
+  const say = (name: string) => spokenName(name, a.say?.[name], hasTagalogVoice)
+  const pair = ([x, y]: [string, string]): [string, string] => [say(x), say(y)]
+  return a.kind === 'call'
+    ? { ...a, teamA: pair(a.teamA), teamB: pair(a.teamB) }
+    : { ...a, winners: pair(a.winners) }
+}
+
 export function spokenLines(a: Announcement, lang: Language, hasTagalogVoice: boolean): string[] {
-  if (lang !== 'tl' || hasTagalogVoice) return announcementLines(a, lang)
-  return linesWith(a, TL_RESPELLED)
+  const spoken = withSpokenNames(a, hasTagalogVoice)
+  if (lang !== 'tl' || hasTagalogVoice) return announcementLines(spoken, lang)
+  return linesWith(spoken, TL_RESPELLED)
 }

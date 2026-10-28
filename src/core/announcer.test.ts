@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { announcementLines, callName, courtWord, spokenLines, type Announcement } from './announcer'
+import { respellName } from './pronounce'
 
 const call: Announcement = { kind: 'call', court: 3, teamA: ['Joy', 'Trisha'], teamB: ['Migs', 'Ella'] }
 const win: Announcement = { kind: 'winner', court: 2, team: 'B', winners: ['Bea', 'Joy'] }
@@ -55,5 +56,32 @@ describe('spokenLines', () => {
 
   it('keeps real Tagalog when a Tagalog voice exists', () => {
     expect(spokenLines(call, 'tl', true)[0]).toBe('Susunod na laro, Court three.')
+  })
+
+  it('respells Filipino names for an English voice', () => {
+    const a: Announcement = { kind: 'call', court: 1, teamA: ['Jun', 'Rhea'], teamB: ['Juan D.', 'Joy'] }
+    expect(spokenLines(a, 'en', false)[1]).toBe('Team A: Joon and Ray-ah.')
+    expect(spokenLines(a, 'en', false)[2]).toBe('Team B: Wahn D. and Joy.')
+  })
+
+  it('leaves names alone for a Tagalog voice', () => {
+    const a: Announcement = { kind: 'call', court: 1, teamA: ['Jun', 'Rhea'], teamB: ['Migs', 'Joy'] }
+    expect(spokenLines(a, 'tl', true)[1]).toBe('Team A: Jun at Rhea.')
+  })
+
+  it("uses the organizer's own spelling first", () => {
+    const a: Announcement = { kind: 'winner', court: 1, team: 'A', winners: ['Jun', 'Dhang'], say: { Dhang: 'Dahng' } }
+    expect(spokenLines(a, 'en', false)[1]).toBe('The winner is Team A: Joon and Dahng!')
+  })
+})
+
+describe('Filipino names', () => {
+  it('calls "Ma." by the first two names', () => {
+    expect(callName('Ma. Cristina Reyes', ['Ma. Cristina Reyes', 'Ma. Luisa Cruz'])).toBe('Ma. Cristina')
+  })
+
+  it('says Ma. as Maria and ñ as ny', () => {
+    expect(respellName('Ma. Cristina')).toBe('Maria Cristina')
+    expect(respellName('Niño')).toBe('Ninyo')
   })
 })

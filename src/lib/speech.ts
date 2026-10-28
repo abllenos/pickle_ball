@@ -1,4 +1,4 @@
-import { spokenLines, type Announcement } from '../core/announcer'
+import { spokenLines, spokenName, type Announcement } from '../core/announcer'
 import type { Language, VoiceStyle } from '../types/models'
 
 export type SpeakOptions = {
@@ -76,9 +76,12 @@ function playChime(): Promise<void> {
 let token = 0
 
 function speakRound(a: Announcement, options: SpeakOptions): Promise<void> {
+  const voice = pickVoice(options.lang, options.voiceURI, options.style)
+  return speakLines(spokenLines(a, options.lang, isTagalog(voice)), voice, options)
+}
+
+function speakLines(lines: string[], voice: SpeechSynthesisVoice | undefined, options: SpeakOptions): Promise<void> {
   return new Promise((resolve) => {
-    const voice = pickVoice(options.lang, options.voiceURI, options.style)
-    const lines = spokenLines(a, options.lang, isTagalog(voice))
     const narrator = options.style === 'narrator'
     lines.forEach((line, i) => {
       const u = new SpeechSynthesisUtterance(line)
@@ -105,6 +108,13 @@ export async function speak(a: Announcement, options: SpeakOptions): Promise<voi
   if (!options.sayTwice || t !== token) return
   await new Promise((r) => setTimeout(r, 1500))
   if (t === token) await speakRound(a, options)
+}
+
+export function previewName(name: string, sayAs: string | undefined, options: SpeakOptions): void {
+  if (!isSpeechSupported) return
+  const voice = pickVoice(options.lang, options.voiceURI, options.style)
+  stopSpeaking()
+  void speakLines([spokenName(name, sayAs, isTagalog(voice))], voice, options)
 }
 
 export function stopSpeaking() {
