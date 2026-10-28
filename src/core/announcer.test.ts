@@ -81,7 +81,23 @@ describe('Filipino names', () => {
   })
 
   it('says Ma. as Maria and ñ as ny', () => {
-    expect(respellName('Ma. Cristina')).toBe('Maria Cristina')
-    expect(respellName('Niño')).toBe('Ninyo')
+    expect(respellName('Ma. Cristina')).toBe('Maria Kris-tee-nah')
+    expect(respellName('Niño')).toBe('Nin-yoh')
+  })
+
+  it('reads Bisaya names syllable by syllable', () => {
+    expect(respellName('Tatoy')).toBe('Tah-toy')
+    expect(respellName('Gelo')).toBe('Jeh-loh')
+    expect(respellName('Jaijai')).toBe('Jye-jye')
+    expect(respellName('Hernand')).toBe('Hehr-nahnd')
+    expect(respellName('Dodong')).toBe('Doh-dong')
+    expect(respellName('Angelo')).toBe('Ahn-jeh-loh')
+    expect(respellName('Jhun')).toBe('Joon')
+  })
+
+  it('leaves English-spelled names for the voice to read', () => {
+    for (const name of ['Mike', 'Trisha', 'Ella', 'Jay', 'John', 'Paul', 'Bea', 'Kyle', 'James', 'Joy']) {
+      expect(respellName(name)).toBe(name)
+    }
   })
 })
